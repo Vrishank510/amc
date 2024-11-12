@@ -3,12 +3,998 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download File</title>
+    <title>Copy Multiple Text Blocks</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .text-block {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: monospace;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            word-wrap: break-word;
+        }
+        .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .copy-button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        /* Hide the textarea */
+        .hidden-textarea {
+            position: absolute;
+            left: -9999px;
+        }
+    </style>
 </head>
 <body>
 
-<a href="/">link</a>
+<h2>MC Codes</h2>
+
+<div class="container">
+    <div class="text-block" id="textBlock1">
+        <div class="title">LED, Buzzer when Pressed</div>
+        <button class="copy-button" onclick="copyText('textBlock1')">Copy Block 1 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText1">
+            #include 
+            #include "inc\tm4c123gh6pm.h"
+            void delayMs(int n);
+            int value;
+            int main(void)
+            {
+            /* enable clock to GPIO F/D at clock gating control register // GPIO PORT D PIN 7 is
+            connected to Buzzer */
+            SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;//PD
+            SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;//PF
+            /* enable the GPIO pins for the PF2/PF3/PB3/PC4 as output */
+            GPIO_PORTD_LOCK_R = 0x4C4F434B; // unlock GPIO Port D
+            GPIO_PORTD_CR_R = 0x80; // allow changes to PD7-1 for GPIO
+            GPIO_PORTD_DIR_R = 0xf0;//PD7
+            GPIO_PORTD_DEN_R = 0xf0; /* enable the GPIO pins for digital function */
+            GPIO_PORTF_DIR_R = 0x08; /* set PORTF3 pin as output (LED) pin */
+            /* and PORTF4 as input, SW1 is on PORTF4 */
+            GPIO_PORTF_DEN_R = 0x18; /* set PORTF pins 4-3 as digital pins */
+            GPIO_PORTF_PUR_R = 0x10; /* enable pull up for pin 4 */
+            while (1)
+            {
+            value = GPIO_PORTF_DATA_R; /* read data from PORTF */
+            value = ~value; /* switch is low active; LED is high active */
+            value = value >> 1; /* shift it right to display on green LED */
+            GPIO_PORTF_DATA_R = value; /* put it on the green LED */
+            value = value << 5;
+            GPIO_PORTD_DATA_R = value;
+            }
+            }
+            /* delay n milliseconds (16 MHz CPU clock) */
+            void delayMs(int n)
+            {
+            int i, j;
+            for(i = 0 ; i < n; i++)
+            for(j = 0; j < 4180; j++)
+            {} /* do nothing for 1 ms */
+            }
+    
+Copy Block 1 Text</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock2">
+        <div class="title">LED on Timer</div>
+        <button class="copy-button" onclick="copyText('textBlock2')">Copy Block 2 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText2">#include <stdint.h>
+            #include <stdio.h>
+            #include "inc\tm4c123gh6pm.h"
+            void delayMs(int n)
+            {
+             int i, j;
+             for(i = 0 ; i < n; i++)
+             for(j = 0; j < 4180; j++)
+             {} /* do nothing for 1 ms */
+            }
+            int main(void)
+            {
+             /* enable clock to GPIOF/B/C at clock gating control register */
+            
+             SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;//PF
+            
+             /* enable the GPIO pins for the PF2/PF3/PB3/PC4 as output */
+             GPIO_PORTF_DIR_R = 0x0E;//PF2/3
+             /* enable the GPIO pins for digital function */
+             GPIO_PORTF_DEN_R = 0x0E;
+             while(1)
+             {
+            
+            GPIO_PORTF_DATA_R = 0x02;
+             delayMs(1000);
+            GPIO_PORTF_DATA_R = 0x04;
+             delayMs(1000);
+             GPIO_PORTF_DATA_R = 0x08;
+             delayMs(1000);
+            }
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock3">
+        <div class="title">Potentiometer</div>
+        <button class="copy-button" onclick="copyText('textBlock3')">Copy Block 3 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText3">#include "inc\tm4c123gh6pm.h"
+            #include <stdbool.h>
+            #include <stdint.h>
+            void delayMs(int n)
+            {
+            int i,j;
+            for(i=0;i<n;i++)
+            for(j=0;j<4180;j++)
+            {}
+            }
+            void shift_out1(unsigned char str );
+            volatile int num1,num2,num3,num4;
+            int main(void)
+            {
+             volatile int result;
+             unsigned char a[16] =
+            {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
+             /* enable clocks */
+             SYSCTL_RCGCGPIO_R |= 0x08; /* enable clock to GPIOE (AIN0 is on PE3) */
+             SYSCTL_RCGCADC_R |= 1; /* enable clock to ADC0 */
+             SYSCTL_RCGCGPIO_R |= 0x10;
+             GPIO_PORTE_DIR_R |= 0x1F;
+             GPIO_PORTE_DEN_R |= 0x1F;
+             /* initialize PE3 for AIN0 input */
+             GPIO_PORTD_AFSEL_R |= 8; /* enable alternate function */
+             GPIO_PORTD_DEN_R &= ~8; /* disable digital function */
+             GPIO_PORTD_AMSEL_R |= 8; /* enable analog function */
+            
+             //unsigned int i;
+             /* initialize ADC0 */
+             ADC0_ACTSS_R &= ~1; /* disable SS3 during configuration */
+             ADC0_EMUX_R &= ~0x000F; /* software trigger conversion */
+             ADC0_SSMUX0_R &= ~0xFFFFFFFF;
+             ADC0_SSMUX0_R |= 0x04; /* get input from channel 0 */
+             ADC0_SSCTL0_R |= 0x06; /* take one sample at a time, set flag at 1st sample */
+             ADC0_ACTSS_R |= 0x01; /* enable ADC0 sequencer 3 */
+            
+             while(1)
+             {
+             ADC0_PSSI_R |= 1; /* start a conversion sequence 3 */
+             while((ADC0_RIS_R & 1) == 0); /* wait for conversion complete */
+             result = ADC0_SSFIFO0_R; /* read conversion result */
+             ADC0_ISC_R = 1; /* clear completion flag */
+            
+             num1 = result%10;//copies data from the specified location
+            result = result/10;
+             num2 = result%10;
+             result = result/10;
+             num3 = result%10;
+            result = result/10;
+             num4 = result%10;
+            shift_out1(a[num1]);
+            shift_out1(a[num2]);
+            shift_out1(a[num3]);
+            shift_out1(a[num4]);
+            shift_out1(0x00);
+             delayMs(1000);
+            }
+            }
+            void shift_out1(unsigned char str)
+            {
+            unsigned char j=0,check;
+            for(j=0;j<=7;j++)
+            {
+            GPIO_PORTE_DATA_R = 0x00; //PE3 pin(sclk) is low (0000 0000)
+            check = (str &(1<<j));
+            if(check)
+            GPIO_PORTE_DATA_R = 0x04; //PE2 pin(sdat) is high (0000 0100)
+            else
+             GPIO_PORTE_DATA_R |= 0x00;
+             GPIO_PORTE_DATA_R |= 0x08; //PE3 pin(sclk) is high (0000 1000)
+             GPIO_PORTE_DATA_R |= 0x10;
+            }
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock4">
+        <div class="title">Switch LED</div>
+        <button class="copy-button" onclick="copyText('textBlock4')">Copy Block 4 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText4">#include <stdint.h>
+            #include "inc\tm4c123gh6pm.h"
+            int main(void)
+            {
+            unsigned int value;
+            SYSCTL_RCGCGPIO_R |= 0x20; /* enable clock to gpiof */
+            GPIO_PORTF_DIR_R = 0x0E; /* set PORTF 1,2&3 pin as output led pin */
+            GPIO_PORTD_DEN_R = 0x12; /*set PORTF pins 4 & 1 as digital pins */
+            GPIO_PORTD_PUR_R = 0x10; /* enable pull up for pin 4 */
+            while(1)
+            {
+            value = GPIO_PORTF_DATA_R; /* read data from PORTF */
+            value = ~value; /* switch is low active; LED is High active */
+            value = value >> 1; /* shift it right to display on red LED */
+            GPIO_PORTF_DATA_R = value; /* put it on red LED */
+            }
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock5">
+        <div class="title">7 segment display</div>
+        <button class="copy-button" onclick="copyText('textBlock5')">Copy Block 5 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText5">#include <stdint.h>
+            #include "inc\tm4c123gh6pm.h"
+            
+            void delayMs(int n);
+            void shift_out1(unsigned char str);
+            int main(void)
+            {
+            unsigned int i;
+            unsigned char a[16] = {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
+                SYSCTL_RCGCGPIO_R = 0x10;
+              GPIO_PORTE_DIR_R = 0x1F;
+              GPIO_PORTE_DEN_R = 0x1F;
+            
+                while(1){
+                    for(i=0;i<=15;i++)	
+                {
+                    shift_out1(a[i]);
+                        shift_out1(a[i]);
+                        shift_out1(a[i]);
+                        shift_out1(a[i]);
+                        shift_out1(a[i]);
+            
+                        delayMs(1000);
+                }
+            }
+            }
+            void shift_out1(unsigned char str)
+            {
+            unsigned char j=0,check;
+            
+                for(j=0;j<=7;j++)
+                {
+                    GPIO_PORTE_DATA_R = 0x00;	//PE3 pin(sclk) is low (0000 0000)
+                    check = (str &(1<<j));
+                    if(check)
+                        GPIO_PORTE_DATA_R =  0x04;	//PE2 pin(sdat) is high (0000 0100)
+                     
+            else
+                                       GPIO_PORTE_DATA_R |=  0x00;
+                               GPIO_PORTE_DATA_R |=  0x08;	//PE3 pin(sclk) is high (0000 1000)
+                                   GPIO_PORTE_DATA_R |=  0x10;
+                }
+            
+            }
+            void delayMs(int n)
+            {
+                int i, j;
+                for(i = 0 ; i < n; i++)
+                    for(j = 0; j < 4180; j++)
+                    {}  /* do nothing for 1 ms */
+                            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock6">
+        <div class="title">DC Motor</div>
+        <button class="copy-button" onclick="copyText('textBlock6')">Copy Block 6 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText6">#include <stdint.h>
+            #include "inc\tm4c123gh6pm.h"
+            void delayMs(int n);
+            int main(void)
+            {
+             /* enable clock to GPIOF/B/C at clock gating control register */
+             SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;//PF 
+             /* enable the GPIO pins for the PF2/PF3/PB3/PC4 as output */
+             GPIO_PORTF_DIR_R = 0x0E;//PF2/3
+             /* enable the GPIO pins for digital function */
+             GPIO_PORTF_DEN_R = 0x0E; 
+             while(1)
+             {
+             GPIO_PORTF_DATA_R = 0x08; 
+             delayMs(1000);
+            } }
+            /* delay n milliseconds (16 MHz CPU clock) */
+            void delayMs(int n)
+            {
+             int i, j;
+             for(i = 0 ; i < n; i++)
+             for(j = 0; j < 4180; j++)
+             {} /* do nothing for 1 ms */
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock7">
+        <div class="title">Stepper Motor</div>
+        <button class="copy-button" onclick="copyText('textBlock7')">Copy Block 7 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText7">#include <stdint.h>
+            #include "inc\tm4c123gh6pm.h"
+            void delayMs(int n);
+            int main(void)
+            {
+             /* enable clock to GPIOF/B/C at clock gating control register */
+             SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5;//PF
+             SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;//PB
+             SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R2;//PC
+             /* enable the GPIO pins for the PF2/PF3/PB3/PC4 as output */
+             GPIO_PORTF_DIR_R = 0x0E;//PF2/3
+            GPIO_PORTB_DIR_R = 0x08;//PB3
+            GPIO_PORTC_DIR_R = 0x10;//PC4
+             /* enable the GPIO pins for digital function */
+             GPIO_PORTF_DEN_R = 0x0E;
+             GPIO_PORTB_DEN_R = 0x08;
+             GPIO_PORTC_DEN_R = 0x10;
+             while(1)
+             {
+             GPIO_PORTF_DATA_R = 0x04; /* PF2 =1*/ 
+             delayMs(80);
+             GPIO_PORTF_DATA_R = 0; 
+             delayMs(20); 
+             GPIO_PORTF_DATA_R = 0x08; /* PF3 =1 */
+             delayMs(80);
+             GPIO_PORTF_DATA_R = 0; 
+             delayMs(20);
+             GPIO_PORTB_DATA_R = 0x08; /* PB2 =3 */ 
+             delayMs(80);
+             GPIO_PORTB_DATA_R = 0; 
+             delayMs(20); 
+             GPIO_PORTC_DATA_R = 0x10; /* P2 =1*/ 
+             delayMs(80);
+             GPIO_PORTC_DATA_R = 0; 
+             delayMs(20);
+            }
+            }
+            /* delay n milliseconds (16 MHz CPU clock) */
+            void delayMs(int n)
+            {
+             int i, j;
+             for(i = 0 ; i < n; i++)
+             for(j = 0; j < 4180; j++)
+             {} /* do nothing for 1 ms */
+             }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock8">
+        <div class="title">Analog Keyboard</div>
+        <button class="copy-button" onclick="copyText('textBlock8')">Copy Block 8 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText8">#include <stdint.h>
+            #include <stdbool.h>
+            #include "inc\tm4c123gh6pm.h"
+            #include "driverlib/sysctl.h"
+            
+            #define LCD_clear()   LCD_command(0x1)        /* Clear display LCD */
+            #define LCD_origin()  LCD_command(0x2)        /* Set to origin LCD */
+            #define LCD_row1()    LCD_command(0x80)        /* Begin at Line 1 */
+            #define LCD_row2()    LCD_command(0xC0)  /* Begin at Line 2 */
+            void shift_out1(unsigned char str);
+            void LCD_enable(void);
+            void LCD_command(unsigned char command);
+            void LCD_putc(unsigned char ascii);
+            void LCD_puts(unsigned char *lcd_string);
+            void LCD_init(void);
+            unsigned char key_scan(unsigned int volatile rec_val);//stores key pressed
+            int main(void)
+            255555555555555550{
+                uint32_t ui32ADC0Value;
+                unsigned char Dig_val;//values for LCD
+                volatile uint32_t ui32TempAvg,Temp_val;
+                
+                
+                
+                SYSCTL_RCGCGPIO_R |= 0x039;   /* enable clock to GPIOD/E/A/F */
+              SYSCTL_RCGCADC_R |= 1;       /* enable clock to ADC0 */
+                
+                /* initialize PE3 for AIN4 input  */
+                GPIO_PORTD_AFSEL_R |= 8;       /* enable alternate function */
+                GPIO_PORTD_DEN_R &= ~8;        /* disable digital function */
+                GPIO_PORTD_AMSEL_R |= 8;       /* enable analog function */
+                GPIO_PORTE_DIR_R |= 0x0C;			/*   */
+                GPIO_PORTE_DEN_R |= 0x0C;
+                GPIO_PORTA_DIR_R |= 0x20;
+                GPIO_PORTA_DEN_R |= 0x20;
+                GPIO_PORTF_DIR_R |= 0x01;
+                GPIO_PORTF_DEN_R |= 0x01;
+                /* initialize ADC0 */
+               ADC0_ACTSS_R &= ~1;        /* disable SS0 during configuration */
+               ADC0_EMUX_R &= ~0x000F;    /* software trigger conversion */ 
+               ADC0_SSMUX0_R |= 0x05  ;         /* get input from channel 4 */
+               ADC0_SSCTL0_R |= 0x06;        /* take one sample at a time, set flag at 1st sample */
+               ADC0_ACTSS_R |= 0x01;           /* enable ADC0 sequencer 0 */
+                
+                
+                  LCD_init();	//LCD 16x2 initializing
+                  LCD_row1();	//Cursor position at 1st line
+                  LCD_puts("Interfacing");
+                LCD_row2();	//Cursor position at 2nd line
+                LCD_puts("Analog KEYPAD");
+                SysCtlDelay(5000000);
+                LCD_clear();
+                    while(1)
+                {
+                ADC0_PSSI_R |= 1;        /* start a conversion sequence 0 */
+                while((ADC0_RIS_R & 1) == 0) ;   /* wait for conversion complete */
+                ui32ADC0Value = ADC0_SSFIFO0_R; /* read conversion result */
+                ADC0_ISC_R = 1;          /* clear completion flag */
+                Temp_val = ui32ADC0Value/10;
+                    Dig_val = key_scan(Temp_val);//compare the key pressed
+                    SysCtlDelay(50000);
+                    LCD_row1();
+                    LCD_puts("Press any Key");
+                    LCD_row2();
+                    if(Dig_val <= 'F')//if the ascii is less or equal to F put the value in LCD
+                        LCD_putc(Dig_val);
+                }
+            }
+            
+            
+            unsigned char key_scan(unsigned int volatile rec_val)
+            {
+                
+                      if(  rec_val==373 || rec_val == 374)	return '0';	    // 0 key pressed
+                else if( rec_val == 376 || rec_val == 377 )  return '1'; 	  // 1st key pressed
+                else if( rec_val == 380 || rec_val == 379 || rec_val == 380)  return '2';	    // 2nd key pressed
+                else if( rec_val == 381 || rec_val == 382)  return '3'; 	  // 3rd key pressed
+                else if( rec_val == 357 || rec_val == 358 || rec_val == 359)  return '4';    	// 4th key pressed
+                else if( rec_val == 362 || rec_val == 363 || rec_val == 364)  return '5';    	// 5th key pressed
+                else if( rec_val == 367 || rec_val == 368 || rec_val == 369)  return '6';     // 6th key pressed
+                else if( rec_val == 371 || rec_val == 372)  return '7';   	// 7th key pressed
+                else if( rec_val == 317 || rec_val == 318 || rec_val == 319)  return '8';    	// 8th key pressed
+                else if( rec_val == 333 || rec_val == 334 || rec_val == 335)  return '9';   	// 9th key pressed
+                else if( rec_val == 345 || rec_val == 346 || rec_val == 347)  return 'A';   	// A  key pressed
+                else if( rec_val == 353 || rec_val == 354 || rec_val == 355)  return 'B';   	// B key pressed
+                else if( rec_val == 0)    return 'C';   	// C key pressed
+                else if( rec_val == 203 || rec_val == 204 || rec_val == 205)  return 'D';    	// D key pressed
+                else if( rec_val == 272 || rec_val == 273 || rec_val == 274)  return 'E';			// E key pressed
+                else if( rec_val == 306 || rec_val == 307 || rec_val == 308)  return 'F';   	// F key pressed
+                else 
+                return 'G';
+            
+            }
+            
+            void LCD_puts(unsigned char *lcd_string)
+            {
+                  while (*lcd_string)
+                  {
+                          LCD_putc(*lcd_string++);
+                  }
+            }
+            
+            void LCD_init()
+            {
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x20);
+            SysCtlDelay(500000);
+                  LCD_command(0x20);
+            SysCtlDelay(500000);
+                LCD_command(0x28); //Selecting 4bit LCD 16x2
+            SysCtlDelay(500000);
+                LCD_command(0x0C); //LCD cursor off
+            SysCtlDelay(500000);
+                LCD_command(0x06); //LCD display on
+            SysCtlDelay(500000);
+                LCD_command(0x01); //LCD clear screen
+            SysCtlDelay(500000);
+            }
+            
+            unsigned char PP1 = 0x00;
+            void LCD_putc(unsigned char ascii)
+            {
+                unsigned char volatile  num;
+                num = ascii;
+                
+                // here reversing the bits of lcd_data
+                //e.g 00110011 will become 110110
+                num = ((num & 0x11)<<3)| ((num & 0x22)<<1)|((num & 0x44)>>1)|((num & 0x88)>>3);
+                ascii = num;
+                //Sending higher nibble of lcd data
+                PP1 = (PP1 & 0xF0)|((ascii>>4) & 0x0F);
+                PP1 = PP1 | 0xA0; // setting 7th pin as high RS = 1, EN = 1;
+                PP1 = PP1 & ~(0x40); //RW = 0
+                
+                //shifting data bits to shift register
+                shift_out1(PP1);
+                SysCtlDelay(500);
+                PP1 = PP1 & ~(0x20); // En = 0
+                shift_out1(PP1);
+                SysCtlDelay(500);
+                //Sending lower nibble of lcd data
+                PP1 = (PP1 & 0xF0)|(ascii & 0x0F);
+                PP1 = PP1 | 0xA0; // setting 7th bit as high RS = 1, EN = 1;
+                PP1 = PP1 & ~(0x40); //RW = 0
+                shift_out1(PP1);
+                SysCtlDelay(500);
+                PP1 = PP1 & ~(0x20); // EN = 0
+                shift_out1(PP1);
+                SysCtlDelay(500);
+            }
+            
+            void shift_out1(unsigned char str)
+            {
+               unsigned char j=0,check;
+                
+                GPIO_PORTA_DATA_R = 0x00;   //PA5 pin(stk) is low (0000 0000)
+                for(j=0;j<=7;j++)
+                {
+                 
+                    GPIO_PORTE_DATA_R = 0x00;   //PE3 pin(sclk) is low (0000 0000)
+                    check = (str &(1<<j));
+                    if(check)
+                        
+                    GPIO_PORTE_DATA_R |= 0x04;   //PE2 pin(sdat) is high (0000 0100)
+                    else
+                        
+                    GPIO_PORTE_DATA_R = 0x00;   //PE2 pin(sdat) is low (0000 0000)
+            
+                    GPIO_PORTE_DATA_R |= 0x08;   //PE3 pin(sclk) is high (0000 1000), sclk=1;
+                }
+                
+                GPIO_PORTA_DATA_R |= 0x20;   //PA5 pin(stk) is high (0010 0000) , stk=1,storing completed;
+            }
+            
+            unsigned char PP0 = 0x00;
+            void LCD_command(unsigned char command)
+            {
+                unsigned char volatile num;
+                num = command;
+                // here reversing the bits of lcd_command
+                //e.g 00110011 will become 11001100
+                num = ((num & 0x11)<<3)| ((num & 0x22)<<1)|((num & 0x44)>>1)|((num & 0x88)>>3);
+                command = num;
+                //Sending higher nibble of lcd data
+                PP0 = (PP0 & 0xF0)|((command>>4) & 0x0F);//ok
+                PP0 = PP0 & (~(3 << 7)); //  setting 7th pin as low RS = 0 , RW = 0
+                PP0 = PP0 | 0x20;	// EN = 1
+                //shifting bits to shift register
+                shift_out1(PP0);
+                SysCtlDelay(500);
+                PP0 = PP0 & ~(0x20); //EN = 0
+                shift_out1(PP0);
+                SysCtlDelay(500);
+                 //Sending lower nibble of lcd command
+                PP0 = (PP0 & 0xF0)|(command & 0x0F);
+                PP0 = PP0 & (~(3 << 7));   // RS = 0,RW = 0
+                PP0 = PP0 | 0x20;	// EN = 1
+                    //Sending lower nibble of lcd command
+                shift_out1(PP0);
+                SysCtlDelay(500);
+                PP0 = PP0 & ~(0x20); // EN = 0
+                shift_out1(PP0);
+                SysCtlDelay(500);
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock9">
+        <div class="title">LDR</div>
+        <button class="copy-button" onclick="copyText('textBlock9')">Copy Block 9 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText9">/* p7_1.c: A to D conversion */
+
+            /* This program converts the analog input from AIN0 (J3.9 of LaunchPad) using sample sequencer 3 and software trigger continuously.
+            Notice from Table 7-7, AIN0 channel is on PE3 pin. */
+            
+            #include "inc\tm4c123gh6pm.h"
+            #include <stdbool.h>
+            #include <stdint.h>
+            void shift_out1(unsigned char str);
+            void delayMs(int n);
+            volatile int num1,num2,num3,num4;
+            unsigned int temp;
+            int main(void)
+            
+            {
+                volatile int result;
+                unsigned char a[16] = {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
+              // unsigned int i;
+                /* enable clocks */
+                SYSCTL_RCGCGPIO_R |= 0x08;   /* enable clock to GPIOE (AIN0 is on PE3) */
+                SYSCTL_RCGCADC_R |= 1;       /* enable clock to ADC0 */
+                SYSCTL_RCGCGPIO_R |= 0x10;
+                GPIO_PORTE_DIR_R |= 0x1F;
+                GPIO_PORTE_DEN_R |= 0x1F;
+                /* initialize PE3 for AIN0 input  */
+                GPIO_PORTD_AFSEL_R |= 1;       /* enable alternate function */
+                GPIO_PORTD_DEN_R &= ~1;        /* disable digital function */
+                GPIO_PORTD_AMSEL_R |= 1;       /* enable analog function */
+               
+                /* initialize ADC0 */
+               ADC0_ACTSS_R &= ~1;        /* disable SS3 during configuration */
+               ADC0_EMUX_R &= ~0x000F;    /* software trigger conversion */
+               ADC0_SSMUX0_R &= ~0xFFFFFFFF;  
+                 ADC0_SSMUX0_R |= 0x07;         /* get input from channel 0 */
+                ADC0_SSCTL0_R |= 0x06;        /* take one sample at a time, set flag at 1st sample */
+               ADC0_ACTSS_R |= 0x01;           /* enable ADC0 sequencer 3 */
+                
+                while(1)
+                {
+                    ADC0_PSSI_R |= 1;        /* start a conversion sequence 3 */
+                    while((ADC0_RIS_R & 1) == 0) ;   /* wait for conversion complete */
+                    result = ADC0_SSFIFO0_R; /* read conversion result */
+                    ADC0_ISC_R = 1;          /* clear completion flag */
+                    temp= (1475 - (((2475 * result)) / 4096))/10;
+                          temp= ((temp * 9) + 160) / 5;
+                            result=temp;
+            num1 = result%10;//copies data from the specified location
+                    result = result/10;
+                num2 = result%10;
+                   result = result/10;
+                num3 = result%10;
+                    result = result/10;
+            num4 = result%10;
+                        shift_out1(a[num1]);
+                        shift_out1(a[num2]);
+                        shift_out1(a[num3]);
+                        shift_out1(a[num4]);
+                        shift_out1(0x00);	
+                      delayMs(200);
+            }
+                }
+            
+            void shift_out1(unsigned char str)
+            {
+            unsigned char j=0,check;
+             unsigned int i;
+                for(j=0;j<=7;j++)
+                {
+                    GPIO_PORTE_DATA_R = 0x00;	//PE3 pin(sclk) is low (0000 0000)
+                    check = (str &(1<<j));
+                    if(check)
+                        GPIO_PORTE_DATA_R =  0x04;	//PE2 pin(sdat) is high (0000 0100)
+                     
+            else
+                                       GPIO_PORTE_DATA_R |=  0x00;
+                               GPIO_PORTE_DATA_R |=  0x08;	//PE3 pin(sclk) is high (0000 1000)
+                                   GPIO_PORTE_DATA_R |=  0x10;
+                }
+            
+            }
+            void delayMs(int n)
+            {
+                int i,j;
+                for(i=0;i<n;i++)
+                   for(j=0;j<4180;j++)
+                {}
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock10">
+        <div class="title">Temperature sensor</div>
+        <button class="copy-button" onclick="copyText('textBlock10')">Copy Block 10 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText10">/* p7_1.c: A to D conversion */
+
+            /* This program converts the analog input from AIN0 (J3.9 of LaunchPad) using sample sequencer 3 and software trigger continuously.
+            Notice from Table 7-7, AIN0 channel is on PE3 pin. */
+            
+            #include "inc\tm4c123gh6pm.h"
+            #include <stdbool.h>
+            #include <stdint.h>
+            void shift_out1(unsigned char str);
+            void delayMs(int n);
+            volatile int num1,num2,num3,num4;
+            unsigned int temp;
+            int main(void)
+            
+            {
+                volatile int result;
+                unsigned char a[16] = {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
+              // unsigned int i;
+                /* enable clocks */
+                SYSCTL_RCGCGPIO_R |= 0x08;   /* enable clock to GPIOE (AIN0 is on PE3) */
+                SYSCTL_RCGCADC_R |= 1;       /* enable clock to ADC0 */
+                SYSCTL_RCGCGPIO_R |= 0x10;
+                GPIO_PORTE_DIR_R |= 0x1F;
+                GPIO_PORTE_DEN_R |= 0x1F;
+                /* initialize PE3 for AIN0 input  */
+                GPIO_PORTD_AFSEL_R |= 1;       /* enable alternate function */
+                GPIO_PORTD_DEN_R &= ~1;        /* disable digital function */
+                GPIO_PORTD_AMSEL_R |= 1;       /* enable analog function */
+               
+                /* initialize ADC0 */
+               ADC0_ACTSS_R &= ~1;        /* disable SS3 during configuration */
+               ADC0_EMUX_R &= ~0x000F;    /* software trigger conversion */
+               ADC0_SSMUX0_R &= ~0xFFFFFFFF;  
+                 ADC0_SSMUX0_R |= 0x07;         /* get input from channel 0 */
+                ADC0_SSCTL0_R |= 0x06;        /* take one sample at a time, set flag at 1st sample */
+               ADC0_ACTSS_R |= 0x01;           /* enable ADC0 sequencer 3 */
+                
+                while(1)
+                {
+                    ADC0_PSSI_R |= 1;        /* start a conversion sequence 3 */
+                    while((ADC0_RIS_R & 1) == 0) ;   /* wait for conversion complete */
+                    result = ADC0_SSFIFO0_R; /* read conversion result */
+                    ADC0_ISC_R = 1;          /* clear completion flag */
+                    temp= (1475 - (((2475 * result)) / 4096))/10;
+                          temp= ((temp * 9) + 160) / 5;
+                            result=temp;
+            num1 = result%10;//copies data from the specified location
+                    result = result/10;
+                num2 = result%10;
+                   result = result/10;
+                num3 = result%10;
+                    result = result/10;
+            num4 = result%10;
+                        shift_out1(a[num1]);
+                        shift_out1(a[num2]);
+                        shift_out1(a[num3]);
+                        shift_out1(a[num4]);
+                        shift_out1(0x00);	
+                      delayMs(200);
+            }
+                }
+            
+            void shift_out1(unsigned char str)
+            {
+            unsigned char j=0,check;
+             unsigned int i;
+                for(j=0;j<=7;j++)
+                {
+                    GPIO_PORTE_DATA_R = 0x00;	//PE3 pin(sclk) is low (0000 0000)
+                    check = (str &(1<<j));
+                    if(check)
+                        GPIO_PORTE_DATA_R =  0x04;	//PE2 pin(sdat) is high (0000 0100)
+                     
+            else
+                                       GPIO_PORTE_DATA_R |=  0x00;
+                               GPIO_PORTE_DATA_R |=  0x08;	//PE3 pin(sclk) is high (0000 1000)
+                                   GPIO_PORTE_DATA_R |=  0x10;
+                }
+            
+            }
+            void delayMs(int n)
+            {
+                int i,j;
+                for(i=0;i<n;i++)
+                   for(j=0;j<4180;j++)
+                {}
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock11">
+        <div class="title">PWM</div>
+        <button class="copy-button" onclick="copyText('textBlock11')">Copy Block 11 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText11">/* Use PWM to control LED duty cycle */
+            /* PWM wave Generated at PF3 Connected to GREEN LED and can be obsered using 
+            LED as well as CRO connected Across PF3, integer x is used to vary Duty Cycle */
+            #include <stdint.h>
+            #include "inc\tm4c123gh6pm.h"
+            int main(void)
+            {
+             void delayMs(int n);
+             int x = 0xFF00;
+             
+             /* Enable Peripheral Clocks */
+             SYSCTL_RCGCPWM_R = 0x02; /* enable clock to PWM1 */
+             SYSCTL_RCGCGPIO_R = 0x20; /* enable clock to PORTF */
+             SYSCTL_RCC_R = 0x00100000; /* use pre-divide for PWM clock */
+             SYSCTL_RCC_R = 0x000E0000; /* set 64 for pre-divide for PWM */
+             /* Enable port PF3 for PWM1 M1PWM7 */
+             
+             GPIO_PORTF_AFSEL_R = 0x08; /* PF3 uses alternate function */
+             GPIO_PORTF_PCTL_R = ~0x0000F000; /* make PF3 PWM output pin */
+             GPIO_PORTF_PCTL_R = 0x00005000;
+             GPIO_PORTF_DEN_R = 0x08; /* pin digital */
+             
+             PWM1_3_CTL_R = 0; /* stop counter */
+             PWM1_3_GENB_R = 0x0000008C; /* M1PWM7 output set when reload, */
+             /* clear when match PWMCMPA */
+             PWM1_3_LOAD_R = 0xFFFF; /* set load value with max value */
+             PWM1_3_CMPA_R = x; /* set duty cycle to 50% */
+             PWM1_3_CTL_R = 0x01; /* start timer */
+             PWM1_ENABLE_R = 0x80; /* start PWM1 ch7 */
+             
+             for(;;) 
+             {
+             // x = x - 1000;
+             // if (x <= 0) x = 0xFFFE;
+             PWM1_3_CMPA_R = x;
+             delayMs(300);
+             }
+            }
+            /* delay n milliseconds (16 MHz CPU clock) */
+            void delayMs(int n)
+            {
+             int i, j;
+             for(i = 0 ; i < n; i++)
+             for(j = 0; j < 3180; j++)
+             {} /* do nothing for 1 ms */
+            }</textarea>
+    </div>
+
+    <div class="text-block" id="textBlock12">
+        <div class="title">Text on LCD</div>
+        <button class="copy-button" onclick="copyText('textBlock12')">Copy Block 12 Text</button>
+        <!-- Hidden Textarea -->
+        <textarea class="hidden-textarea" id="hiddenText12">#include <stdint.h>
+            #include <stdbool.h>
+            #include "inc\tm4c123gh6pm.h"
+            #include "driverlib/sysctl.h"
+            
+            #define LCD_clear()   LCD_command(0x1)        /* Clear display LCD */
+            #define LCD_origin()  LCD_command(0x2)        /* Set to origin LCD */
+            #define LCD_row1()    LCD_command(0x80)        /* Begin at Line 1 */
+            #define LCD_row2()    LCD_command(0xC0)  /* Begin at Line 2 */
+            void shift_out1(unsigned char str);
+            void LCD_enable(void);
+            void LCD_command(unsigned char command);
+            void LCD_putc(unsigned char ascii);
+            void LCD_puts(unsigned char *lcd_string);
+            void LCD_init(void);
+            
+            int main(void)
+            {
+            
+            
+            SYSCTL_RCGCGPIO_R |= 0x039;   /* enable clock to GPIOD/E/A/F */
+            
+               
+                /* initialize PE3 for AIN4 input  */
+                GPIO_PORTD_AFSEL_R |= 8;       /* enable alternate function */
+                GPIO_PORTD_DEN_R &= ~8;        /* disable digital function */
+                GPIO_PORTD_AMSEL_R |= 8;       /* enable analog function */
+            GPIO_PORTE_DIR_R |= 0x0C; /*   */
+            GPIO_PORTE_DEN_R |= 0x0C;
+            GPIO_PORTA_DIR_R |= 0x20;
+            GPIO_PORTA_DEN_R |= 0x20;
+            GPIO_PORTF_DIR_R |= 0x01;
+            GPIO_PORTF_DEN_R |= 0x01;
+               
+             LCD_init(); //LCD 16x2 initializing
+                LCD_row1();
+            LCD_puts("     RC ");
+                LCD_row2();
+                LCD_puts("     NITW ");
+            }
+            
+            void LCD_puts(unsigned char *lcd_string)
+            {
+                  while (*lcd_string)
+                  {
+                          LCD_putc(*lcd_string++);
+                  }
+            }
+            
+            void LCD_init()
+            {
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x30);
+            SysCtlDelay(500000);
+                LCD_command(0x20);
+            SysCtlDelay(500000);
+             LCD_command(0x20);
+            SysCtlDelay(500000);
+                LCD_command(0x28); //Selecting 4bit LCD 16x2
+            SysCtlDelay(500000);
+                LCD_command(0x0C); //LCD cursor off
+            SysCtlDelay(500000);
+                LCD_command(0x06); //LCD display on
+            SysCtlDelay(500000);
+                LCD_command(0x01); //LCD clear screen
+            SysCtlDelay(500000);
+            }
+            unsigned char PP1 = 0x00;
+            void LCD_putc(unsigned char ascii)
+            {
+            unsigned char volatile  num;
+            num = ascii;
+            
+            // here reversing the bits of lcd_data
+            //e.g 00110011 will become 110110
+            num = ((num & 0x11)<<3)| ((num & 0x22)<<1)|((num & 0x44)>>1)|((num & 0x88)>>3);
+            ascii = num;
+            //Sending higher nibble of lcd data
+                PP1 = (PP1 & 0xF0)|((ascii>>4) & 0x0F);
+            PP1 = PP1 | 0xA0; // setting 7th pin as high RS = 1, EN = 1;
+            PP1 = PP1 & ~(0x40); //RW = 0
+            
+            //shifting data bits to shift register
+            shift_out1(PP1);
+            SysCtlDelay(500);
+            PP1 = PP1 & ~(0x20); // En = 0
+            shift_out1(PP1);
+            SysCtlDelay(500);
+            //Sending lower nibble of lcd data
+                PP1 = (PP1 & 0xF0)|(ascii & 0x0F);
+            PP1 = PP1 | 0xA0; // setting 7th bit as high RS = 1, EN = 1;
+            PP1 = PP1 & ~(0x40); //RW = 0
+            shift_out1(PP1);
+            SysCtlDelay(500);
+            PP1 = PP1 & ~(0x20); // EN = 0
+            shift_out1(PP1);
+            SysCtlDelay(500);
+            }
+            
+            void shift_out1(unsigned char str)
+            {
+               unsigned char j=0,check;
+            
+            GPIO_PORTA_DATA_R = 0x00;   //PA5 pin(stk) is low (0000 0000)
+            for(j=0;j<=7;j++)
+            {
+                 
+            GPIO_PORTE_DATA_R = 0x00;   //PE3 pin(sclk) is low (0000 0000)
+            check = (str &(1<<j));
+            if(check)
+            
+            GPIO_PORTE_DATA_R |= 0x04;   //PE2 pin(sdat) is high (0000 0100)
+            else
+            
+            GPIO_PORTE_DATA_R = 0x00;   //PE2 pin(sdat) is low (0000 0000)
+            
+            GPIO_PORTE_DATA_R |= 0x08;   //PE3 pin(sclk) is high (0000 1000), sclk=1;
+            }
+            
+            GPIO_PORTA_DATA_R |= 0x20;   //PA5 pin(stk) is high (0010 0000) , stk=1,storing completed;
+            }
+            
+            unsigned char PP0 = 0x00;
+            void LCD_command(unsigned char command)
+            {
+            unsigned char volatile num;
+            num = command;
+            // here reversing the bits of lcd_command
+            //e.g 00110011 will become 11001100
+            num = ((num & 0x11)<<3)| ((num & 0x22)<<1)|((num & 0x44)>>1)|((num & 0x88)>>3);
+            command = num;
+            //Sending higher nibble of lcd data
+                PP0 = (PP0 & 0xF0)|((command>>4) & 0x0F);//ok
+            PP0 = PP0 & (~(3 << 7)); //  setting 7th pin as low RS = 0 , RW = 0
+            PP0 = PP0 | 0x20; // EN = 1
+            //shifting bits to shift register
+            shift_out1(PP0);
+            SysCtlDelay(500);
+            PP0 = PP0 & ~(0x20); //EN = 0
+            shift_out1(PP0);
+            SysCtlDelay(500);
+            //Sending lower nibble of lcd command
+                PP0 = (PP0 & 0xF0)|(command & 0x0F);
+            PP0 = PP0 & (~(3 << 7));   // RS = 0,RW = 0
+            PP0 = PP0 | 0x20; // EN = 1
+            //Sending lower nibble of lcd command
+            shift_out1(PP0);
+            SysCtlDelay(500);
+            PP0 = PP0 & ~(0x20); // EN = 0
+            shift_out1(PP0);
+            SysCtlDelay(500);
+            }</textarea>
+    </div>
+</div>
+
+<script>
+    function copyText(blockId) {
+        const textToCopy = document.getElementById('hiddenText' + blockId.charAt(blockId.length - 1)).value;
+        const tempInput = document.createElement("textarea");
+        tempInput.value = textToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+    }
+</script>
 
 </body>
 </html>
-
