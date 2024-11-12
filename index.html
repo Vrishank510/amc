@@ -676,156 +676,150 @@ Copy Block 1 Text</textarea>
             }</textarea>
     </div>
 
-    <div class="text-block" id="textBlock10">
+    <div class="text-block" id="textBlock&">
         <div class="title">Temperature sensor</div>
-        <button class="copy-button" onclick="copyText('textBlock10')">Copy Block 10 Text</button>
+        <button class="copy-button" onclick="copyText('textBlock&')">Copy Block & Text</button>
         <!-- Hidden Textarea -->
-        <textarea class="hidden-textarea" id="hiddenText10">/* p7_1.c: A to D conversion */
-
-            /* This program converts the analog input from AIN0 (J3.9 of LaunchPad) using sample sequencer 3 and software trigger continuously.
-            Notice from Table 7-7, AIN0 channel is on PE3 pin. */
-            
+        <textarea class="hidden-textarea" id="hiddenText&">
             #include "inc\tm4c123gh6pm.h"
-            #include <stdbool.h>
-            #include <stdint.h>
-            void shift_out1(unsigned char str);
-            void delayMs(int n);
-            volatile int num1,num2,num3,num4;
-            unsigned int temp;
-            int main(void)
-            
-            {
-                volatile int result;
-                unsigned char a[16] = {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
-              // unsigned int i;
-                /* enable clocks */
-                SYSCTL_RCGCGPIO_R |= 0x08;   /* enable clock to GPIOE (AIN0 is on PE3) */
-                SYSCTL_RCGCADC_R |= 1;       /* enable clock to ADC0 */
-                SYSCTL_RCGCGPIO_R |= 0x10;
-                GPIO_PORTE_DIR_R |= 0x1F;
-                GPIO_PORTE_DEN_R |= 0x1F;
-                /* initialize PE3 for AIN0 input  */
-                GPIO_PORTD_AFSEL_R |= 1;       /* enable alternate function */
-                GPIO_PORTD_DEN_R &= ~1;        /* disable digital function */
-                GPIO_PORTD_AMSEL_R |= 1;       /* enable analog function */
-               
-                /* initialize ADC0 */
-               ADC0_ACTSS_R &= ~1;        /* disable SS3 during configuration */
-               ADC0_EMUX_R &= ~0x000F;    /* software trigger conversion */
-               ADC0_SSMUX0_R &= ~0xFFFFFFFF;  
-                 ADC0_SSMUX0_R |= 0x07;         /* get input from channel 0 */
-                ADC0_SSCTL0_R |= 0x06;        /* take one sample at a time, set flag at 1st sample */
-               ADC0_ACTSS_R |= 0x01;           /* enable ADC0 sequencer 3 */
-                
-                while(1)
-                {
-                    ADC0_PSSI_R |= 1;        /* start a conversion sequence 3 */
-                    while((ADC0_RIS_R & 1) == 0) ;   /* wait for conversion complete */
-                    result = ADC0_SSFIFO0_R; /* read conversion result */
-                    ADC0_ISC_R = 1;          /* clear completion flag */
-                    temp= (1475 - (((2475 * result)) / 4096))/10;
-                          temp= ((temp * 9) + 160) / 5;
-                            result=temp;
-            num1 = result%10;//copies data from the specified location
-                    result = result/10;
-                num2 = result%10;
-                   result = result/10;
-                num3 = result%10;
-                    result = result/10;
-            num4 = result%10;
-                        shift_out1(a[num1]);
-                        shift_out1(a[num2]);
-                        shift_out1(a[num3]);
-                        shift_out1(a[num4]);
-                        shift_out1(0x00);	
-                      delayMs(200);
-            }
-                }
-            
-            void shift_out1(unsigned char str)
-            {
-            unsigned char j=0,check;
-             unsigned int i;
-                for(j=0;j<=7;j++)
-                {
-                    GPIO_PORTE_DATA_R = 0x00;	//PE3 pin(sclk) is low (0000 0000)
-                    check = (str &(1<<j));
-                    if(check)
-                        GPIO_PORTE_DATA_R =  0x04;	//PE2 pin(sdat) is high (0000 0100)
-                     
-            else
-                                       GPIO_PORTE_DATA_R |=  0x00;
-                               GPIO_PORTE_DATA_R |=  0x08;	//PE3 pin(sclk) is high (0000 1000)
-                                   GPIO_PORTE_DATA_R |=  0x10;
-                }
-            
-            }
-            void delayMs(int n)
-            {
-                int i,j;
-                for(i=0;i<n;i++)
-                   for(j=0;j<4180;j++)
-                {}
-            }</textarea>
+#include <stdbool.h>
+#include <stdint.h>
+void shift_out1(unsigned char str);
+void delayMs(int n);
+volatile int num1,num2,num3,num4;
+unsigned int temp;
+int main(void)
+
+{
+    volatile int result;
+	unsigned char a[16] = {0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E};
+  // unsigned int i;
+    /* enable clocks */
+    SYSCTL_RCGCGPIO_R |= 0x08;   /* enable clock to GPIOE (AIN0 is on PE3) */
+    SYSCTL_RCGCADC_R |= 1;       /* enable clock to ADC0 */
+    SYSCTL_RCGCGPIO_R |= 0x10;
+    GPIO_PORTE_DIR_R |= 0x1F;
+    GPIO_PORTE_DEN_R |= 0x1F;
+    /* initialize PE3 for AIN0 input  */
+    GPIO_PORTD_AFSEL_R |= 1;       /* enable alternate function */
+    GPIO_PORTD_DEN_R &= ~1;        /* disable digital function */
+    GPIO_PORTD_AMSEL_R |= 1;       /* enable analog function */
+   
+    /* initialize ADC0 */
+   ADC0_ACTSS_R &= ~1;        /* disable SS3 during configuration */
+   ADC0_EMUX_R &= ~0x000F;    /* software trigger conversion */
+   ADC0_SSMUX0_R &= ~0xFFFFFFFF;  
+ 	ADC0_SSMUX0_R |= 0x07;         /* get input from channel 0 */
+    ADC0_SSCTL0_R |= 0x06;        /* take one sample at a time, set flag at 1st sample */
+   ADC0_ACTSS_R |= 0x01;           /* enable ADC0 sequencer 3 */
+    
+    while(1)
+    {
+        ADC0_PSSI_R |= 1;        /* start a conversion sequence 3 */
+        while((ADC0_RIS_R & 1) == 0) ;   /* wait for conversion complete */
+        result = ADC0_SSFIFO0_R; /* read conversion result */
+        ADC0_ISC_R = 1;          /* clear completion flag */
+        temp= (1475 - (((2475 * result)) / 4096))/10;
+			  temp= ((temp * 9) + 160) / 5;
+				result=temp;
+num1 = result%10;//copies data from the specified location
+		result = result/10;
+	num2 = result%10;
+       result = result/10;
+	num3 = result%10;
+		result = result/10;
+num4 = result%10;
+			shift_out1(a[num1]);
+			shift_out1(a[num2]);
+			shift_out1(a[num3]);
+			shift_out1(a[num4]);
+			shift_out1(0x00);	
+		  delayMs(200);
+}
+	}
+
+void shift_out1(unsigned char str)
+{
+unsigned char j=0,check;
+ unsigned int i;
+	for(j=0;j<=7;j++)
+	{
+		GPIO_PORTE_DATA_R = 0x00;	//PE3 pin(sclk) is low (0000 0000)
+		check = (str &(1<<j));
+		if(check)
+			GPIO_PORTE_DATA_R =  0x04;	//PE2 pin(sdat) is high (0000 0100)
+		 
+else
+				           GPIO_PORTE_DATA_R |=  0x00;
+                   GPIO_PORTE_DATA_R |=  0x08;	//PE3 pin(sclk) is high (0000 1000)
+		               GPIO_PORTE_DATA_R |=  0x10;
+	}
+
+}
+void delayMs(int n)
+{
+	int i,j;
+	for(i=0;i<n;i++)
+	   for(j=0;j<4180;j++)
+	{}
+}</textarea>
     </div>
 
-    <div class="text-block" id="textBlock11">
+    <div class="text-block" id="textBlocka">
         <div class="title">PWM</div>
-        <button class="copy-button" onclick="copyText('textBlock11')">Copy Block 11 Text</button>
+        <button class="copy-button" onclick="copyText('textBlocka')">Copy Block 11 Text</button>
         <!-- Hidden Textarea -->
-        <textarea class="hidden-textarea" id="hiddenText11">/* Use PWM to control LED duty cycle */
-            /* PWM wave Generated at PF3 Connected to GREEN LED and can be obsered using 
-            LED as well as CRO connected Across PF3, integer x is used to vary Duty Cycle */
+        <textarea class="hidden-textarea" id="hiddenTexta">
             #include <stdint.h>
-            #include "inc\tm4c123gh6pm.h"
-            int main(void)
-            {
-             void delayMs(int n);
-             int x = 0xFF00;
-             
-             /* Enable Peripheral Clocks */
-             SYSCTL_RCGCPWM_R = 0x02; /* enable clock to PWM1 */
-             SYSCTL_RCGCGPIO_R = 0x20; /* enable clock to PORTF */
-             SYSCTL_RCC_R = 0x00100000; /* use pre-divide for PWM clock */
-             SYSCTL_RCC_R = 0x000E0000; /* set 64 for pre-divide for PWM */
-             /* Enable port PF3 for PWM1 M1PWM7 */
-             
-             GPIO_PORTF_AFSEL_R = 0x08; /* PF3 uses alternate function */
-             GPIO_PORTF_PCTL_R = ~0x0000F000; /* make PF3 PWM output pin */
-             GPIO_PORTF_PCTL_R = 0x00005000;
-             GPIO_PORTF_DEN_R = 0x08; /* pin digital */
-             
-             PWM1_3_CTL_R = 0; /* stop counter */
-             PWM1_3_GENB_R = 0x0000008C; /* M1PWM7 output set when reload, */
-             /* clear when match PWMCMPA */
-             PWM1_3_LOAD_R = 0xFFFF; /* set load value with max value */
-             PWM1_3_CMPA_R = x; /* set duty cycle to 50% */
-             PWM1_3_CTL_R = 0x01; /* start timer */
-             PWM1_ENABLE_R = 0x80; /* start PWM1 ch7 */
-             
-             for(;;) 
-             {
-             // x = x - 1000;
-             // if (x <= 0) x = 0xFFFE;
-             PWM1_3_CMPA_R = x;
-             delayMs(300);
-             }
-            }
-            /* delay n milliseconds (16 MHz CPU clock) */
-            void delayMs(int n)
-            {
-             int i, j;
-             for(i = 0 ; i < n; i++)
-             for(j = 0; j < 3180; j++)
-             {} /* do nothing for 1 ms */
-            }</textarea>
+                #include "inc\tm4c123gh6pm.h"
+                int main(void)
+                {
+                 void delayMs(int n);
+                 int x = 0xFF00;
+                 
+                 /* Enable Peripheral Clocks */
+                 SYSCTL_RCGCPWM_R = 0x02; /* enable clock to PWM1 */
+                 SYSCTL_RCGCGPIO_R = 0x20; /* enable clock to PORTF */
+                 SYSCTL_RCC_R = 0x00100000; /* use pre-divide for PWM clock */
+                 SYSCTL_RCC_R = 0x000E0000; /* set 64 for pre-divide for PWM */
+                 /* Enable port PF3 for PWM1 M1PWM7 */
+                 
+                 GPIO_PORTF_AFSEL_R = 0x08; /* PF3 uses alternate function */
+                 GPIO_PORTF_PCTL_R = ~0x0000F000; /* make PF3 PWM output pin */
+                 GPIO_PORTF_PCTL_R = 0x00005000;
+                 GPIO_PORTF_DEN_R = 0x08; /* pin digital */
+                 
+                 PWM1_3_CTL_R = 0; /* stop counter */
+                 PWM1_3_GENB_R = 0x0000008C; /* M1PWM7 output set when reload, */
+                 /* clear when match PWMCMPA */
+                 PWM1_3_LOAD_R = 0xFFFF; /* set load value with max value */
+                 PWM1_3_CMPA_R = x; /* set duty cycle to 50% */
+                 PWM1_3_CTL_R = 0x01; /* start timer */
+                 PWM1_ENABLE_R = 0x80; /* start PWM1 ch7 */
+                 
+                 for(;;) 
+                 {
+                 // x = x - 1000;
+                 // if (x <= 0) x = 0xFFFE;
+                 PWM1_3_CMPA_R = x;
+                 delayMs(300);
+                 }
+                }
+                /* delay n milliseconds (16 MHz CPU clock) */
+                void delayMs(int n)
+                {
+                 int i, j;
+                 for(i = 0 ; i < n; i++)
+                 for(j = 0; j < 3180; j++)
+                 {} /* do nothing for 1 ms */
+                }</textarea>
     </div>
 
-    <div class="text-block" id="textBlock12">
+    <div class="text-block" id="textBlockb">
         <div class="title">Text on LCD</div>
-        <button class="copy-button" onclick="copyText('textBlock12')">Copy Block 12 Text</button>
+        <button class="copy-button" onclick="copyText('textBlockb')">Copy Block 12 Text</button>
         <!-- Hidden Textarea -->
-        <textarea class="hidden-textarea" id="hiddenText12">#include <stdint.h>
+        <textarea class="hidden-textarea" id="hiddenTextb">#include <stdint.h>
             #include <stdbool.h>
             #include "inc\tm4c123gh6pm.h"
             #include "driverlib/sysctl.h"
